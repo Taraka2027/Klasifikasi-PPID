@@ -1,7 +1,39 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation' // Impor useRouter untuk navigasi
 import { SearchInterface } from "@/components/search-interface"
 import { Header } from "@/components/header"
 
+// Definisikan tipe data untuk setiap item hasil
+interface ResultItem {
+  id: number;
+  text: string;
+}
+
+const mockResults: ResultItem[] = [
+  { id: 1, text: 'Rencana Pembangunan Jangka Menengah Daerah (RPJMD) Kabupaten Bojonegoro (Periode Terbaru)' },
+  { id: 2, text: 'Laporan Akuntabilitas Kinerja Instansi Pemerintah (LAKIP) Dinas Pendidikan Tahun 2024' },
+  { id: 3, text: 'Laporan Akuntabilitas Kinerja (LAKIP) Seluruh Pemkab Bojonegoro Tahun 2024' },
+  { id: 4, text: 'Notulensi Rapat Internal Tim Anggaran Pemerintah Daerah (TAPD)' },
+  { id: 5, text: 'Dokumen Hasil Rapat Pembahasan APBD 2025 dengan DPRD' },
+]
+
 export default function HomePage() {
+  const [results, setResults] = useState<ResultItem[]>([])
+  const router = useRouter() // Inisialisasi router
+
+  const handleShowResults = () => {
+    setResults(mockResults)
+  }
+
+  // Fungsi untuk pindah ke halaman klasifikasi
+  const handleProceedToClassification = (selectedIds: number[]) => {
+    console.log("Item terpilih:", selectedIds) // Untuk debugging
+    // Untuk prototipe, kita langsung navigasi tanpa mengirim data
+    router.push('/klasifikasi')
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -13,7 +45,11 @@ export default function HomePage() {
               Cari dan akses dokumen pemerintah dengan mudah dan sesuai hukum konstitusi Indonesia
             </p>
           </div>
-          <SearchInterface />
+          <SearchInterface
+            onSearchSubmit={handleShowResults}
+            searchResults={results}
+            onProceed={handleProceedToClassification} // Kirim fungsi navigasi sebagai props
+          />
         </div>
       </main>
     </div>
